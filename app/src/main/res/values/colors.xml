@@ -3,8 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="primary_sage">#B5C18E</color>
+    <color name="grey">#4E5053</color>
+    <color name="grey_30">#994E5053</color>
     <color name="beige">#F7DCB9</color>
     <color name="main_brown">#DEAC80</color>
     <color name="main_brown_30">#EFE7DF</color>
+    <color name="main_brown_dark">#291200</color>
     <color name="secondary_brown">#B99470</color>
 </resources>
