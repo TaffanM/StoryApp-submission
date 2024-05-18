@@ -25,4 +25,5 @@
     <string name="success">success</string>
     <string name="registration_successful">Your account has successfully registered.</string>
     <string name="ok">OK</string>
+    <string name="create_your_account">Create your account</string>
 </resources>

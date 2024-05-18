@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="42dp"
-        android:text="Create your account"
+        android:text="@string/create_your_account"
         android:textColor="@color/main_brown_dark"
         android:textSize="24sp"
         android:textStyle="bold"
