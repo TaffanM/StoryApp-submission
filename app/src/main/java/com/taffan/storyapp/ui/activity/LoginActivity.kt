@@ -10,23 +10,30 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import com.taffan.storyapp.R
 import com.taffan.storyapp.databinding.ActivityLoginBinding
+import com.taffan.storyapp.preferences.UserPreferences
+import com.taffan.storyapp.preferences.dataStore
 import com.taffan.storyapp.ui.model.LoginViewModel
 import com.taffan.storyapp.ui.model.RegisterViewModel
 import com.taffan.storyapp.ui.model.ViewModelFactory
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var userPreferences: UserPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val factory: ViewModelFactory = ViewModelFactory.getInstance()
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(this@LoginActivity)
         val viewModel: LoginViewModel by viewModels {
             factory
         }
+
+        userPreferences = UserPreferences.getInstance(dataStore)
 
         binding.btnRegister.setOnClickListener {
             val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
@@ -50,8 +57,13 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.loginResponse.observe(this) {response ->
             if (!response.error) {
+                lifecycleScope.launch {
+                    userPreferences.saveUser(response.loginResult)
+                }
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
                 startActivity(intent)
                 finish()
             } else {

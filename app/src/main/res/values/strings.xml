@@ -25,4 +25,8 @@
     <string name="registration_successful">Your account has successfully registered.</string>
     <string name="ok">OK</string>
     <string name="create_your_account">Create your account</string>
+    <string name="account_title">account settings</string>
+    <string name="settings_title">Settings page</string>
+    <string name="language">Language</string>
+    <string name="logout">Logout</string>
 </resources>

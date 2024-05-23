@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Memoir</string>
+    <string name="login_to_your_account_tv">Masuk ke akun Anda</string>
+    <string name="email_address">Alamat Email</string>
+    <string name="password">Kata Sandi</string>
+    <string name="welcome_back">Selamat Datang!</string>
+    <string name="login">Masuk</string>
+    <string name="create_account">Buat akun</string>
+    <string name="name">Nama Pengguna</string>
+    <string name="confirm_password">Konfirmasi Kata Sandi</string>
+    <string name="register">Daftar</string>
+    <string name="image_item">gambar cerita</string>
+    <string name="desc">deskripsi</string>
+    <string name="author">penulis</string>
+    <string name="hello_blank_fragment">Halo fragmen kosong</string>
+    <string name="add_story">Tambah cerita</string>
+    <string name="detail_photo">Detail cerita</string>
+    <string name="list_of_memories">Daftar kenangan</string>
+    <string name="add_your_memories">Tambahkan kenangan Anda</string>
+    <string name="camera">Kamera</string>
+    <string name="gallery">Galeri</string>
+    <string name="upload">Ceritakan kisah saya!</string>
+    <string name="your_uploaded_image_preview">Pratinjau gambar yang Anda unggah</string>
+    <string name="success">sukses</string>
+    <string name="registration_successful">Akun Anda telah berhasil terdaftar.</string>
+    <string name="ok">OK</string>
+    <string name="create_your_account">Buat akun Anda</string>
+    <string name="account_title">pengaturan akun</string>
+    <string name="settings_title">Halaman pengaturan</string>
+    <string name="language">Bahasa</string>
+    <string name="logout">Keluar</string>
+</resources>

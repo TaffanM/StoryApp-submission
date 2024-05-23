@@ -29,7 +29,7 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val factory: ViewModelFactory = ViewModelFactory.getInstance()
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(this@RegisterActivity)
         val viewModel: RegisterViewModel by viewModels {
             factory
         }

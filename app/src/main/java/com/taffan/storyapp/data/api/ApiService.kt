@@ -1,9 +1,12 @@
 package com.taffan.storyapp.data.api
 
+import com.taffan.storyapp.data.response.GetStoriesResponse
 import com.taffan.storyapp.data.response.LoginResponse
 import com.taffan.storyapp.data.response.RegisterResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 
@@ -22,4 +25,7 @@ interface ApiService {
         @Field("email") email: String,
         @Field("password") password: String,
     ): LoginResponse
+
+    @GET("stories")
+    suspend fun getStories(): GetStoriesResponse
 }

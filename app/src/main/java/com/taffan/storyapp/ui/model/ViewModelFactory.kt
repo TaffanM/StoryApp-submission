@@ -17,6 +17,8 @@ class ViewModelFactory(
             RegisterViewModel(registerLoginRepository) as T
         } else if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             LoginViewModel(registerLoginRepository) as T
+        } else if (modelClass.isAssignableFrom(StoryViewModel::class.java)) {
+            StoryViewModel(registerLoginRepository) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
@@ -25,9 +27,9 @@ class ViewModelFactory(
     companion object {
         @Volatile
         private var instance: ViewModelFactory? = null
-        fun getInstance(): ViewModelFactory =
+        fun getInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this) {
-                instance ?: ViewModelFactory(Injection.provideRepository())
+                instance ?: ViewModelFactory(Injection.provideRepository(context))
             }.also { instance = it }
     }
 }

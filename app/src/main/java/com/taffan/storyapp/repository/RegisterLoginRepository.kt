@@ -1,6 +1,7 @@
 package com.taffan.storyapp.repository
 
 import com.taffan.storyapp.data.api.ApiService
+import com.taffan.storyapp.data.response.GetStoriesResponse
 import com.taffan.storyapp.data.response.LoginResponse
 import com.taffan.storyapp.data.response.LoginResult
 import com.taffan.storyapp.data.response.RegisterResponse
@@ -19,6 +20,12 @@ class RegisterLoginRepository private constructor(
     suspend fun login(email: String, password: String): LoginResponse {
         return withContext(Dispatchers.IO) {
             apiService.login(email, password)
+        }
+    }
+
+    suspend fun getStories(token: String): GetStoriesResponse {
+        return withContext(Dispatchers.IO) {
+            apiService.getStories()
         }
     }
 
