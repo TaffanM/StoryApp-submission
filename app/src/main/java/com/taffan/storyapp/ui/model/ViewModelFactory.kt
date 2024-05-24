@@ -19,6 +19,8 @@ class ViewModelFactory(
             LoginViewModel(registerLoginRepository) as T
         } else if (modelClass.isAssignableFrom(StoryViewModel::class.java)) {
             StoryViewModel(registerLoginRepository) as T
+        } else if (modelClass.isAssignableFrom(DetailStoryViewModel::class.java)){
+            DetailStoryViewModel(registerLoginRepository) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

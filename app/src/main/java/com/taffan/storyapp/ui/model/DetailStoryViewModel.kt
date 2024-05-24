@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.taffan.storyapp.data.response.ListStoryItem
+import com.taffan.storyapp.data.response.Story
 import com.taffan.storyapp.repository.RegisterLoginRepository
 import kotlinx.coroutines.launch
 
-class StoryViewModel(private val repository: RegisterLoginRepository): ViewModel() {
-    private val _stories = MutableLiveData<List<ListStoryItem>>()
-    val stories: LiveData<List<ListStoryItem>> = _stories
+class DetailStoryViewModel(private val repository: RegisterLoginRepository): ViewModel() {
+    private val _story = MutableLiveData<Story>()
+    val story: LiveData<Story> = _story
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -18,13 +18,13 @@ class StoryViewModel(private val repository: RegisterLoginRepository): ViewModel
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    fun fetchStories() {
+    fun getStory(id: String) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val response = repository.getStories()
+                val response = repository.getDetail(id)
                 if(!response.error) {
-                    _stories.value = response.listStory
+                    _story.value = response.story
                 } else {
                     _error.value = response.message
                 }
@@ -35,4 +35,6 @@ class StoryViewModel(private val repository: RegisterLoginRepository): ViewModel
             }
         }
     }
+
+
 }

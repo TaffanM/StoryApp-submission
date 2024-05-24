@@ -18,6 +18,6 @@ object Injection {
         } else {
             ApiConfig.getApiService("")
         }
-        return RegisterLoginRepository.getInstance(apiService)
+        return RegisterLoginRepository.getInstance(apiService, pref)
     }
 }

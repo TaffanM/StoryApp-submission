@@ -14,7 +14,7 @@ import java.util.concurrent.Flow
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore("user")
 class UserPreferences private constructor(
     private val dataStore: DataStore<Preferences>
-){
+) {
     private object PreferencesKeys {
         val TOKEN = stringPreferencesKey("token")
         val NAME = stringPreferencesKey("name")
@@ -27,7 +27,7 @@ class UserPreferences private constructor(
             val name = preferences[PreferencesKeys.NAME]
             val userId = preferences[PreferencesKeys.USER_ID]
 
-            if (token != null && name != null && userId != null) {
+            if (name != null && userId != null && token != null) {
                 LoginResult(name = name, userId = userId, token = token)
             } else {
                 null
@@ -54,7 +54,7 @@ class UserPreferences private constructor(
         private var INSTANCE: UserPreferences? = null
 
         fun getInstance(dataStore: DataStore<Preferences>): UserPreferences {
-            return INSTANCE?: synchronized(this) {
+            return INSTANCE ?: synchronized(this) {
                 val instance = UserPreferences(dataStore)
                 INSTANCE = instance
                 instance

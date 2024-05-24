@@ -4,16 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:backgroundTint="@color/beige"
-    android:background="@color/primary_sage"
+    android:background="@color/beige"
+    android:backgroundTint="@color/primary_sage"
     app:cardCornerRadius="20dp"
+    android:transitionName="detail_card_transition"
+    android:id="@+id/card_detail"
     android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="8dp"
     tools:context=".ui.fragment.DetailFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="32dp">
 
         <ImageView
             android:id="@+id/iv_detail_photo"
@@ -21,6 +24,7 @@
             android:layout_height="256dp"
             android:contentDescription="@string/detail_photo"
             tools:src="@tools:sample/avatars"
+            android:transitionName="detail_photo_transition"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -33,6 +37,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginHorizontal="16dp"
             tools:text="Detail Name"
+            android:transitionName="detail_name_transition"
             android:textStyle="bold"
             android:textSize="18sp"
             android:textColor="@color/main_brown_dark"
@@ -46,9 +51,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textSize="18sp"
+            android:transitionName="detail_desc_transition"
             android:layout_marginHorizontal="16dp"
             tools:text="Detail Description"
             app:layout_constraintTop_toBottomOf="@+id/tv_detail_name"/>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

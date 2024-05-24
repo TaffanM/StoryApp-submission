@@ -29,4 +29,5 @@
     <string name="settings_title">Settings page</string>
     <string name="language">Language</string>
     <string name="logout">Logout</string>
+    <string name="empty_image_warning">Please select an image to upload</string>
 </resources>
