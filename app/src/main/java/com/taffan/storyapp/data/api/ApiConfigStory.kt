@@ -5,20 +5,26 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import com.taffan.storyapp.BuildConfig
 import com.taffan.storyapp.BuildConfig.BASE_URL
+import com.taffan.storyapp.preferences.UserPreferences
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class ApiConfig {
+
+class ApiConfigStory {
     companion object {
-        fun getApiService(token: String): ApiService {
+        fun getApiService(userPreferences: UserPreferences): ApiServiceStory {
             val loggingInterceptor =
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             val authInterceptor = Interceptor { chain ->
                 val req = chain.request()
+                val user = runBlocking {
+                    userPreferences.getUser().first()
+                }
                 val requestHeaders = req.newBuilder()
-                    .addHeader("Authorization", "Bearer $token")
+                    .addHeader("Authorization", "Bearer ${user?.token}")
                     .build()
                 chain.proceed(requestHeaders)
             }
@@ -29,12 +35,13 @@ class ApiConfig {
                 .build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://story-api.dicoding.dev/v1/")
+                .baseUrl(BuildConfig.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
 
-            return retrofit.create(ApiService::class.java)
+            return retrofit.create(ApiServiceStory::class.java)
         }
     }
 }
+

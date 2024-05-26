@@ -1,14 +1,14 @@
 package com.taffan.storyapp.ui.model
 
+import StoryRepository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.taffan.storyapp.data.response.ListStoryItem
-import com.taffan.storyapp.repository.RegisterLoginRepository
 import kotlinx.coroutines.launch
 
-class StoryViewModel(private val repository: RegisterLoginRepository): ViewModel() {
+class StoryViewModel(private val repository: StoryRepository): ViewModel() {
     private val _stories = MutableLiveData<List<ListStoryItem>>()
     val stories: LiveData<List<ListStoryItem>> = _stories
 

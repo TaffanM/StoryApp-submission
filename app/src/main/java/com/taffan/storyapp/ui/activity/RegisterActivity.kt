@@ -3,23 +3,17 @@ package com.taffan.storyapp.ui.activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.Observer
 import com.taffan.storyapp.R
-import com.taffan.storyapp.data.api.ApiService
 import com.taffan.storyapp.databinding.ActivityRegisterBinding
-import com.taffan.storyapp.repository.RegisterLoginRepository
 import com.taffan.storyapp.ui.model.RegisterViewModel
 import com.taffan.storyapp.ui.model.ViewModelFactory
-import com.taffan.storyapp.utils.AppExecutors
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -35,16 +29,28 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         binding.btnRegister.setOnClickListener {
+            val nameEmpty = binding.edRegisterName.checkEditTextEmpty()
+            val emailEmpty = binding.edRegisterEmail.checkEditTextEmpty()
+            val passwordEmpty = binding.edRegisterPassword.checkEditTextEmpty()
+            val confirmPasswordEmpty = binding.edConfirmRegisterPassword.checkEditTextEmpty()
             val name = binding.edRegisterName.text.toString().trim()
             val email = binding.edRegisterEmail.text.toString().trim()
             val password = binding.edRegisterPassword.text.toString().trim()
             val confirmPassword = binding.edConfirmRegisterPassword.text.toString().trim()
 
-            if (password == confirmPassword) {
-                viewModel.register(name, email, password)
+            if (!nameEmpty && !emailEmpty && !passwordEmpty && !confirmPasswordEmpty) {
+                if (password == confirmPassword) {
+                    viewModel.isLoading.observe(this) {
+                        showLoading(it)
+                    }
+                    viewModel.register(name, email, password)
+                } else {
+                    Toast.makeText(this, "Your password and confirm password must be the same", Toast.LENGTH_SHORT).show()
+                }
             } else {
-                Toast.makeText(this, "Your password and confirm password must be the same", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
+
 
         }
 
@@ -58,6 +64,7 @@ class RegisterActivity : AppCompatActivity() {
 
         viewModel.error.observe(this) { errorMessage ->
             Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+            showLoading(false)
         }
 
         onBackPressedCallback()
@@ -75,7 +82,7 @@ class RegisterActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
+        showLoading(false)
         dialog.show()
     }
 
@@ -93,6 +100,14 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         dialog.show()
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     private fun onBackPressedCallback() {

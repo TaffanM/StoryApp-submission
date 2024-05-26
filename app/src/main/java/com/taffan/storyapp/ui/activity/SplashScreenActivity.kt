@@ -2,12 +2,8 @@ package com.taffan.storyapp.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.taffan.storyapp.R
 import com.taffan.storyapp.preferences.UserPreferences
 import com.taffan.storyapp.preferences.dataStore
 import kotlinx.coroutines.flow.first

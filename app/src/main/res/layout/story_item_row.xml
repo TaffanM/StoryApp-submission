@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     card_view:cardCornerRadius="20dp"
     card_view:cardElevation="4dp"
+    android:id="@+id/card_view_item"
     android:backgroundTint="@color/main_brown"
     android:layout_margin="16dp">
 
@@ -27,6 +28,7 @@
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintBottom_toTopOf="@+id/tv_item_name"
             card_view:layout_constraintDimensionRatio="1:1"
+            android:transitionName="story_photo_transition"
             tools:src="@tools:sample/avatars" />
 
         <TextView
@@ -41,6 +43,7 @@
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@id/iv_item_photo"
             card_view:layout_constraintEnd_toEndOf="parent"
+            android:transitionName="story_name_transition"
             tools:text="@string/author" />
 
         <TextView
@@ -53,6 +56,7 @@
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@id/tv_item_name"
             card_view:layout_constraintEnd_toEndOf="parent"
+            android:transitionName="story_desc_transition"
             tools:text="@string/desc" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

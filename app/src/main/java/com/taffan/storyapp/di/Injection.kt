@@ -1,11 +1,12 @@
 package com.taffan.storyapp.di
 
+import StoryRepository
 import android.content.Context
 import com.taffan.storyapp.data.api.ApiConfig
+import com.taffan.storyapp.data.api.ApiConfigStory
 import com.taffan.storyapp.preferences.UserPreferences
 import com.taffan.storyapp.preferences.dataStore
 import com.taffan.storyapp.repository.RegisterLoginRepository
-import com.taffan.storyapp.utils.AppExecutors
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -19,5 +20,11 @@ object Injection {
             ApiConfig.getApiService("")
         }
         return RegisterLoginRepository.getInstance(apiService, pref)
+    }
+
+    fun storyProvideRepository(context: Context): StoryRepository {
+        val pref = UserPreferences.getInstance(context.dataStore)
+        val apiServiceStory = ApiConfigStory.getApiService(pref)
+        return StoryRepository.getInstance(apiServiceStory, pref)
     }
 }

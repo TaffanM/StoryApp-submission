@@ -29,4 +29,5 @@
     <string name="settings_title">Halaman pengaturan</string>
     <string name="language">Bahasa</string>
     <string name="logout">Keluar</string>
+    <string name="empty_image_warning">Mohon pilih gambar untuk mengunggah</string>
 </resources>

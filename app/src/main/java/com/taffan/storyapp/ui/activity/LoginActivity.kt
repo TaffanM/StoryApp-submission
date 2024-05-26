@@ -2,21 +2,17 @@ package com.taffan.storyapp.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModel
+import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.lifecycleScope
-import com.taffan.storyapp.R
 import com.taffan.storyapp.databinding.ActivityLoginBinding
 import com.taffan.storyapp.preferences.UserPreferences
 import com.taffan.storyapp.preferences.dataStore
 import com.taffan.storyapp.ui.model.LoginViewModel
-import com.taffan.storyapp.ui.model.RegisterViewModel
 import com.taffan.storyapp.ui.model.ViewModelFactory
 import kotlinx.coroutines.launch
 
@@ -44,14 +40,28 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLogin.setOnClickListener {
             val emailEmpty = binding.edLoginEmail.checkEditTextEmpty()
             val passwordEmpty = binding.edLoginPassword.checkEditTextEmpty()
+            val emailValid = binding.edLoginEmail.error == null
+            val passwordValid = binding.edLoginPassword.error == null
 
             if (!emailEmpty && !passwordEmpty) {
-                val email = binding.edLoginEmail.text.toString().trim()
-                val password = binding.edLoginPassword.text.toString().trim()
-                viewModel.login(email, password)
+                if (emailValid && passwordValid) {
+                    val email = binding.edLoginEmail.text.toString().trim()
+                    val password = binding.edLoginPassword.text.toString().trim()
+                    viewModel.isLoading.observe(this) {
+                        showLoading(it)
+                    }
+                    viewModel.login(email, password)
+                } else {
+                    if (!emailValid) {
+                        Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show()
+                    } else if (!passwordValid) {
+                        Toast.makeText(this, "Your password must be at least 8 characters", Toast.LENGTH_SHORT).show()
+                    }
+                }
             } else {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
+
 
         }
 
@@ -73,10 +83,21 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.error.observe(this) {errorMessage ->
             Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+            showLoading(false)
         }
+
+
 
         onBackPressedCallback()
 
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     private fun onBackPressedCallback() {

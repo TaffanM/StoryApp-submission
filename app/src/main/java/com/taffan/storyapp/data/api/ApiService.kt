@@ -31,18 +31,5 @@ interface ApiService {
         @Field("password") password: String,
     ): LoginResponse
 
-    @Multipart
-    @POST("stories")
-    suspend fun uploadImage(
-        @Part file: MultipartBody.Part,
-        @Part("description") description: RequestBody,
-    ): FileUploadResponse
 
-    @GET("stories")
-    suspend fun getStories(): GetStoriesResponse
-
-    @GET("stories/{id}")
-    suspend fun getDetailStories(
-        @Path("id") id: String
-    ): DetailStoryResponse
 }

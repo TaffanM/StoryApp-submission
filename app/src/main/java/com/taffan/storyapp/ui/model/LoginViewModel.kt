@@ -12,11 +12,15 @@ class LoginViewModel(private val registerLoginRepository: RegisterLoginRepositor
     private val _loginResponse = MutableLiveData<LoginResponse>()
     val loginResponse: LiveData<LoginResponse> = _loginResponse
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val response = registerLoginRepository.login(email, password)
                 if (!response.error) {

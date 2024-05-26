@@ -1,43 +1,33 @@
 package com.taffan.storyapp.ui.activity
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.text.TextUtils.replace
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.TransitionInflater
 import com.taffan.storyapp.R
 import com.taffan.storyapp.data.response.ListStoryItem
-import com.taffan.storyapp.databinding.ActivityLoginBinding
 import com.taffan.storyapp.databinding.ActivityMainBinding
 import com.taffan.storyapp.preferences.UserPreferences
 import com.taffan.storyapp.preferences.dataStore
 import com.taffan.storyapp.ui.adapter.StoryAdapter
 import com.taffan.storyapp.ui.fragment.DetailFragment
-import com.taffan.storyapp.ui.model.LoginViewModel
 import com.taffan.storyapp.ui.model.StoryViewModel
-import com.taffan.storyapp.ui.model.ViewModelFactory
-import kotlinx.coroutines.flow.first
+import com.taffan.storyapp.ui.model.StoryViewModelFactory
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var storyAdapter: StoryAdapter
     private lateinit var userPreferences: UserPreferences
-    private val factory: ViewModelFactory = ViewModelFactory.getInstance(this@MainActivity)
+    private val factory: StoryViewModelFactory = StoryViewModelFactory.getInstance(this@MainActivity)
     private val viewModel: StoryViewModel by viewModels {
         factory
     }
@@ -67,6 +57,10 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.isLoading.observe(this) {
             showLoading(it)
+        }
+
+        viewModel.error.observe(this) {
+            binding.tvErrorMessage.text = it
         }
 
         binding.buttonAdd.setOnClickListener {
@@ -110,6 +104,7 @@ class MainActivity : AppCompatActivity() {
     private fun logout() {
         lifecycleScope.launch {
             userPreferences.clearUser()
+            Toast.makeText(this@MainActivity, "Successfully Logout", Toast.LENGTH_SHORT).show()
             val loginIntent = Intent(this@MainActivity, LoginActivity::class.java)
             loginIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(loginIntent)
@@ -137,19 +132,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val card = findViewById<CardView>(R.id.card_detail)
-        val transition = TransitionInflater.from(this).inflateTransition(android.R.transition.fade)
-
 
         supportFragmentManager
             .beginTransaction()
-            .addSharedElement(card, "detail_card_transition")
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
-            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit()
-
-        fragment.sharedElementEnterTransition = transition
     }
 
 }

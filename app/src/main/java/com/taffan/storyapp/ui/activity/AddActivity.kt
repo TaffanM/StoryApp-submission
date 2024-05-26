@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.taffan.storyapp.R
 import com.taffan.storyapp.data.api.ApiConfig
+import com.taffan.storyapp.data.api.ApiConfigStory
 import com.taffan.storyapp.data.response.FileUploadResponse
 import com.taffan.storyapp.preferences.UserPreferences
 import com.taffan.storyapp.preferences.dataStore
@@ -110,7 +111,7 @@ class AddActivity : AppCompatActivity() {
             )
             lifecycleScope.launch {
                 val token = userPreferences.getUser().first()?.token
-                val apiService = token?.let { ApiConfig.getApiService(it) }
+                val apiService = token?.let { ApiConfigStory.getApiService(userPreferences) }
                 try {
                     val successResponse = apiService?.uploadImage(multipartBody, requestBody)
                     showToast(successResponse!!.message)
