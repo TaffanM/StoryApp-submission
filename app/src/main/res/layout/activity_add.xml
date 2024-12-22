@@ -61,11 +61,13 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="16dp"
             android:text="@string/camera"
-            app:layout_constraintBottom_toTopOf="@+id/ed_add_description"
+            app:layout_constraintBottom_toTopOf="@+id/location_switch"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintTop_toBottomOf="@+id/previewImageView"
             app:layout_constraintStart_toEndOf="@+id/galleryButton" />
+
+
 
         <Button
             android:id="@+id/galleryButton"
@@ -80,6 +82,30 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/cameraButton" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/location_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/text_location"
+            app:layout_constraintTop_toTopOf="@+id/text_location"
+            app:layout_constraintEnd_toStartOf="@+id/text_location"
+            />
+
+        <TextView
+            android:id="@+id/text_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_your_location"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_marginStart="12dp"
+            app:layout_constraintBottom_toTopOf="@+id/ed_add_description"
+            app:layout_constraintStart_toEndOf="@+id/location_switch"
+            app:layout_constraintTop_toBottomOf="@+id/cameraButton"
+            />
 
         <EditText
             android:id="@+id/ed_add_description"

@@ -30,4 +30,9 @@
     <string name="language">Bahasa</string>
     <string name="logout">Keluar</string>
     <string name="empty_image_warning">Mohon pilih gambar untuk mengunggah</string>
+    <string name="logo_of_the_app">logo aplikasi</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="maps_page">Halaman Peta</string>
+    <string name="add_your_location">Tambahkan lokasimu</string>
+
 </resources>

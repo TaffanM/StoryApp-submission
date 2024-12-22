@@ -1,5 +1,7 @@
 package com.taffan.storyapp.data.response
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 data class GetStoriesResponse(
@@ -14,6 +16,7 @@ data class GetStoriesResponse(
 	val message: String
 )
 
+@Entity(tableName = "stories")
 data class ListStoryItem(
 
 	@field:SerializedName("photoUrl")
@@ -29,11 +32,12 @@ data class ListStoryItem(
 	val description: String,
 
 	@field:SerializedName("lon")
-	val lon: Double? = null,
+	val lon: Double,
 
+	@PrimaryKey
 	@field:SerializedName("id")
 	val id: String,
 
 	@field:SerializedName("lat")
-	val lat: Double? = null
+	val lat: Double
 )

@@ -11,5 +11,7 @@
         <item name="fontFamily">@font/comfortaa</item>
     </style>
 
+    <style name="Base.Theme.MyGoogleMaps" parent="Theme.Material3.DayNight"/>
+
     <style name="Theme.StoryApp" parent="Base.Theme.StoryApp" />
 </resources>

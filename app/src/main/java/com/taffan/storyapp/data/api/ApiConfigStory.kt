@@ -1,16 +1,14 @@
 package com.taffan.storyapp.data.api
 
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import com.taffan.storyapp.BuildConfig
 import com.taffan.storyapp.BuildConfig.BASE_URL
 import com.taffan.storyapp.preferences.UserPreferences
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 
 
 class ApiConfigStory {
@@ -35,7 +33,7 @@ class ApiConfigStory {
                 .build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl(BuildConfig.BASE_URL)
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()

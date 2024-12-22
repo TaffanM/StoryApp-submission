@@ -31,4 +31,7 @@
     <string name="logout">Logout</string>
     <string name="empty_image_warning">Please select an image to upload</string>
     <string name="logo_of_the_app">logo of the app</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="maps_page">Maps page</string>
+    <string name="add_your_location">Add your location</string>
 </resources>

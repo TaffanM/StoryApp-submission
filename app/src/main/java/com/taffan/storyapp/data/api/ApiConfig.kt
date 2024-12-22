@@ -2,11 +2,8 @@ package com.taffan.storyapp.data.api
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import com.taffan.storyapp.BuildConfig
-import com.taffan.storyapp.BuildConfig.BASE_URL
-import kotlinx.coroutines.runBlocking
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 

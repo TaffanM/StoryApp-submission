@@ -16,12 +16,14 @@ class StoryViewModelFactory(
             StoryViewModel(storyRepository) as T
         } else if (modelClass.isAssignableFrom(DetailStoryViewModel::class.java)) {
             DetailStoryViewModel(storyRepository) as T
+        } else if (modelClass.isAssignableFrom(MapsViewModel::class.java)){
+            MapsViewModel(storyRepository) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
     }
 
     companion object {
-        fun getInstance(context: Context) = StoryViewModelFactory(Injection.storyProvideRepository(context))
+        fun getInstance(context: Context) = StoryViewModelFactory(Injection.storyProvideRepository(context.applicationContext))
     }
 }

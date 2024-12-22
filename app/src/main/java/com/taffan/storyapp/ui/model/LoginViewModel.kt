@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.taffan.storyapp.idling.LoginIdlingResource
 import com.taffan.storyapp.data.response.LoginResponse
 import com.taffan.storyapp.repository.RegisterLoginRepository
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ class LoginViewModel(private val registerLoginRepository: RegisterLoginRepositor
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
+            LoginIdlingResource.increment()
             _isLoading.value = true
             try {
                 val response = registerLoginRepository.login(email, password)
@@ -30,6 +32,8 @@ class LoginViewModel(private val registerLoginRepository: RegisterLoginRepositor
                 }
             } catch (e: Exception) {
                 _error.postValue(e.message)
+            } finally {
+                LoginIdlingResource.decrement()
             }
         }
     }

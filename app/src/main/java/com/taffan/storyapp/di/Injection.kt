@@ -4,6 +4,7 @@ import StoryRepository
 import android.content.Context
 import com.taffan.storyapp.data.api.ApiConfig
 import com.taffan.storyapp.data.api.ApiConfigStory
+import com.taffan.storyapp.data.db.StoryDatabase
 import com.taffan.storyapp.preferences.UserPreferences
 import com.taffan.storyapp.preferences.dataStore
 import com.taffan.storyapp.repository.RegisterLoginRepository
@@ -23,8 +24,9 @@ object Injection {
     }
 
     fun storyProvideRepository(context: Context): StoryRepository {
+        val db = StoryDatabase.getDatabase(context.applicationContext)
         val pref = UserPreferences.getInstance(context.dataStore)
         val apiServiceStory = ApiConfigStory.getApiService(pref)
-        return StoryRepository.getInstance(apiServiceStory, pref)
+        return StoryRepository.getInstance(db, apiServiceStory, pref)
     }
 }

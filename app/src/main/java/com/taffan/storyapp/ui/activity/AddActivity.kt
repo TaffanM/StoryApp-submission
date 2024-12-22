@@ -10,14 +10,17 @@ import com.taffan.storyapp.databinding.ActivityAddBinding
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import com.taffan.storyapp.R
-import com.taffan.storyapp.data.api.ApiConfig
 import com.taffan.storyapp.data.api.ApiConfigStory
 import com.taffan.storyapp.data.response.FileUploadResponse
 import com.taffan.storyapp.preferences.UserPreferences
@@ -29,6 +32,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
@@ -37,6 +41,7 @@ class AddActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
     private lateinit var userPreferences: UserPreferences
     private var currentImageUri: Uri? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -49,6 +54,12 @@ class AddActivity : AppCompatActivity() {
         if (!allPermissionsGranted()) {
             requestPermissionLauncher.launch(REQUIRED_PERMISSION)
         }
+
+        if (!locationPermissionsGranted()) {
+            requestPermissionLauncher.launch(LOCATION_PERMISSION)
+        }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.cameraButton.setOnClickListener { startCameraX() }
@@ -104,34 +115,60 @@ class AddActivity : AppCompatActivity() {
 
             val requestBody = desc.toRequestBody("text/plain".toMediaType())
             val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
-            val multipartBody = MultipartBody.Part.createFormData(
-                "photo",
-                imageFile.name,
-                requestImageFile
-            )
-            lifecycleScope.launch {
-                val token = userPreferences.getUser().first()?.token
-                val apiService = token?.let { ApiConfigStory.getApiService(userPreferences) }
-                try {
-                    val successResponse = apiService?.uploadImage(multipartBody, requestBody)
-                    showToast(successResponse!!.message)
-                    showLoading(false)
-                    val intent = Intent(this@AddActivity, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                    finish()
-                } catch (e: HttpException) {
-                    val errorBody = e.response()?.errorBody()?.string()
-                    val errorResponse = Gson().fromJson(errorBody, FileUploadResponse::class.java)
-                    showToast(errorResponse.message)
-                    showLoading(false)
+            val multipartBody = MultipartBody.Part.createFormData("photo", imageFile.name, requestImageFile)
+
+            if (binding.locationSwitch.isChecked) {
+                getCurrentLocation { location ->
+                    val lat = location.latitude.toString().toRequestBody("text/plain".toMediaType())
+                    val lon = location.longitude.toString().toRequestBody("text/plain".toMediaType())
+                    sendUploadRequest(multipartBody, requestBody, lat, lon)
                 }
+            } else {
+                sendUploadRequest(multipartBody, requestBody, null, null)
             }
         } ?: showToast(getString(R.string.empty_image_warning))
-
-
-
     }
+
+    private fun sendUploadRequest(
+        multipartBody: MultipartBody.Part,
+        requestBody: RequestBody,
+        lat: RequestBody?,
+        lon: RequestBody?
+    ) {
+        lifecycleScope.launch {
+            val token = userPreferences.getUser().first()?.token
+            val apiService = token?.let { ApiConfigStory.getApiService(userPreferences) }
+            try {
+                val call = apiService?.uploadImage(multipartBody, requestBody, lat, lon)
+                showToast(call!!.message)
+                showLoading(false)
+                val intent = Intent(this@AddActivity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
+                val errorResponse = Gson().fromJson(errorBody, FileUploadResponse::class.java)
+                showToast(errorResponse.message)
+                showLoading(false)
+            }
+        }
+    }
+
+    private fun getCurrentLocation(onLocationReceived: (Location) -> Unit) {
+        if (ActivityCompat.checkSelfPermission(this, LOCATION_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissionLauncher.launch(LOCATION_PERMISSION)
+            return
+        }
+
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            location?.let { onLocationReceived(it) }
+        }
+    }
+
+
+    private fun locationPermissionsGranted() =
+        ContextCompat.checkSelfPermission(this, LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED
 
     private fun allPermissionsGranted() =
         ContextCompat.checkSelfPermission(
@@ -161,6 +198,7 @@ class AddActivity : AppCompatActivity() {
 
     companion object {
         private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
+        private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
     }
 
 

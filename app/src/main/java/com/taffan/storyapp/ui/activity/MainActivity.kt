@@ -7,9 +7,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.taffan.storyapp.R
@@ -27,10 +27,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var storyAdapter: StoryAdapter
     private lateinit var userPreferences: UserPreferences
-    private val factory: StoryViewModelFactory = StoryViewModelFactory.getInstance(this@MainActivity)
-    private val viewModel: StoryViewModel by viewModels {
-        factory
-    }
+    private lateinit var factory: StoryViewModelFactory
+    private lateinit var viewModel: StoryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +39,9 @@ class MainActivity : AppCompatActivity() {
 
         userPreferences = UserPreferences.getInstance(dataStore)
 
+        factory = StoryViewModelFactory.getInstance(applicationContext)
+        viewModel = ViewModelProvider(this, factory)[StoryViewModel::class.java]
+
         storyAdapter = StoryAdapter()
         storyAdapter.setOnItemClickCallback(object : StoryAdapter.OnItemClickCallback {
             override fun onItemClicked(story: ListStoryItem) {
@@ -48,12 +49,16 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.stories.observe(this) {stories ->
-            setStoryData(stories)
+        viewModel.storiesPaging.observe(this) { pagingData ->
+            lifecycleScope.launch {
+                storyAdapter.submitData(pagingData)
+            }
         }
 
-        val layoutManager = LinearLayoutManager(this)
-        binding.rvStory.layoutManager = layoutManager
+        binding.rvStory.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = storyAdapter
+        }
 
         viewModel.isLoading.observe(this) {
             showLoading(it)
@@ -66,14 +71,7 @@ class MainActivity : AppCompatActivity() {
         binding.buttonAdd.setOnClickListener {
             val intent = Intent(this@MainActivity, AddActivity::class.java)
             startActivity(intent)
-            onStop()
         }
-
-        lifecycleScope.launch {
-            viewModel.fetchStories()
-        }
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -91,6 +89,12 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
                 true
             }
+            R.id.maps -> {
+                val intent = Intent(this@MainActivity, MapsActivity::class.java)
+                startActivity(intent)
+                finish()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
 
@@ -98,7 +102,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchStories()
+        viewModel.storiesPaging.observe(this) { pagingData ->
+            lifecycleScope.launch {
+                storyAdapter.submitData(pagingData)
+            }
+        }
     }
 
     private fun logout() {
@@ -110,11 +118,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(loginIntent)
             finish()
         }
-    }
-
-    private fun setStoryData(stories: List<ListStoryItem>) {
-        storyAdapter.submitList(stories)
-        binding.rvStory.adapter = storyAdapter
     }
 
     private fun showLoading(isLoading: Boolean) {

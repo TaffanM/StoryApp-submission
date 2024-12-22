@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.lifecycleScope
 import com.taffan.storyapp.databinding.ActivityLoginBinding
 import com.taffan.storyapp.preferences.UserPreferences
@@ -40,10 +39,11 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLogin.setOnClickListener {
             val emailEmpty = binding.edLoginEmail.checkEditTextEmpty()
             val passwordEmpty = binding.edLoginPassword.checkEditTextEmpty()
-            val emailValid = binding.edLoginEmail.error == null
-            val passwordValid = binding.edLoginPassword.error == null
 
             if (!emailEmpty && !passwordEmpty) {
+                val emailValid = binding.edLoginEmail.error == null
+                val passwordValid = binding.edLoginPassword.error == null
+
                 if (emailValid && passwordValid) {
                     val email = binding.edLoginEmail.text.toString().trim()
                     val password = binding.edLoginPassword.text.toString().trim()
@@ -54,16 +54,16 @@ class LoginActivity : AppCompatActivity() {
                 } else {
                     if (!emailValid) {
                         Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show()
-                    } else if (!passwordValid) {
+                    }
+                    if (!passwordValid) {
                         Toast.makeText(this, "Your password must be at least 8 characters", Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
-
-
         }
+
 
         viewModel.loginResponse.observe(this) {response ->
             if (!response.error) {
